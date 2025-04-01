@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5">
+    <!-- <meta http-equiv="refresh" content="5"> -->
     <meta name="description" content="A simple responsive layout using EJS and CSS">
-    <title>Responsive Layout</title>
+    <title>Home Page</title>
     <style>
         * {
             margin: 0;
@@ -84,30 +84,25 @@
 </head>
 <body>
 <%- include('navbar') %>
-
+<button style="margin: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
+    <a href="/blogs" style="color: white; text-decoration: none;">Get Blog</a>
+</button>
     
     <div class="container">
+     <% blogs.forEach((blog)=>{
+        %>
         <div class="card">
-            <!-- <img src="https://via.placeholder.com/300" alt="Card Image"> -->
+            <!-- <img src="<%= blog.image %>" alt="Blog Image"> -->
             <div class="card-content">
-                <h3>Card Title</h3>
-                <p>Card description goes here.</p>
+                <h3><%= blog.title %></h3>
+                <p><%= blog.description %></p>
+                <p><%= blog.subTitle%></p>
+                
             </div>
         </div>
-        <div class="card">
-            <!-- <img src="https://via.placeholder.com/300" alt="Card Image"> -->
-            <div class="card-content">
-                <h3>Card Title</h3>
-                <p>Card description goes here.</p>
-            </div>
-        </div>
-        <div class="card">
-            <!-- <img src="https://via.placeholder.com/300" alt="Card Image"> -->
-            <div class="card-content">
-                <h3>Card Title</h3>
-                <p>Card description goes here.</p>
-            </div>
-        </div>
+        <%
+     })%>
+        
     </div>
     
     <%- include('footer') %>
