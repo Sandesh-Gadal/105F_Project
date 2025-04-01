@@ -85,19 +85,16 @@
     <div class="container">
         <h1>Blogs</h1>
         <p>Welcome to the blogs page. Here you can find various articles and posts.</p>
-        <% blogs.forEach((blog) => { %>
 
-            <div class="card">
-                <!-- <img src="<%= blog.image %>" alt="Blog Image"> -->
-                <div class="card-content">
-                    <h3><%= blog.title %></h3>
-                    <p><%= blog.description %></p>
-                    <p><%= blog.subTitle%></p>
-                    
-                </div>
+        <div class="card">
+            <!-- <img src="<%= blog.image %>" alt="Blog Image"> -->
+            <div class="card-content">
+                <h3><%= blog[0].title %></h3>
+                <p><%= blog[0].description %></p>
+                <p><%= blog[0].subTitle%></p>
+                <button><a href="/delete/<%-blog[0].id%>">Delete me </a></button>
             </div>
-            <%
-         })%>
+        </div>
     </div>
     <%- include ('footer')%>
 

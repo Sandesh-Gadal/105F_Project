@@ -23,10 +23,27 @@ app.get('/',async(req,res)=>{
     res.render("home",{blogs : blogsTableBlogs})
 })
 
-app.get('/blogs',async (req,res)=>{
-    const blogsTableBlogs =await  blogs.findAll()
-    console.log(blogsTableBlogs)
-    res.render("blogs", {blogs : blogsTableBlogs})
+app.get('/blog/:id', async (req,res)=>{
+  const blogId = req.params.id
+//   const foundData =  await blogs.findByPk(blogId)
+const foundData = await blogs.findAll({
+    where :{
+        id: blogId
+    }
+})
+console.log(foundData)  
+
+    res.render("singleBlog",{blog : foundData})
+})
+
+app.get('/delete/:id',async(req,res)=>{
+  const blogId = req.params.id 
+ await blogs.destroy({
+    where :{
+        id : blogId
+    }
+ })
+ res.redirect('/')
 })
 
 app.get('/addblog',(req,res)=>{
@@ -34,11 +51,6 @@ app.get('/addblog',(req,res)=>{
 })
 
 app.post('/addblog', async(req, res) => {
-    console.log("Received Data:", req.body); // Debugging output
-  
-    // const  title = req.body.title
-    // const subTitle = req.body.subTitle
-    // const description = req.body.description
 
     const {title, subTitle, description} = req.body
     if(!title || !subTitle || !description) {
