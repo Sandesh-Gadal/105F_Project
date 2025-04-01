@@ -1,6 +1,9 @@
 const express = require('express');
 const { blogs } = require('./model/index.js');
 const app = express();
+const {storage , multer}= require("./middleware/multerConfig.js")
+require('dotenv').config()
+const upload = multer({storage: storage})
 
 //alternative for above two lines 
 // const app = require('express')();
@@ -53,17 +56,21 @@ app.get('/update/:id',async (req, res)=>{
     res.render("updateBlog",{id : blogId, blog : blogData})
 })
 
-app.post('/update/:id', async (req, res) => {
+app.post('/update/:id', upload.single('image') , async (req, res) => {
     const {id} = req.params
     const {title, subTitle, description} = req.body
-    if(!title || !subTitle || !description) {
+  
+  
+    if(!title || !subTitle || !description)  {
         return res.status(400).send("All fields are required");
     }
     //updating the database
     await blogs.update({
         title: title,
         subTitle: subTitle,
-        description: description},{
+        description: description,
+        image: process.env.backendUrl + req.file.filename
+    },{
             where:{
                 id:id
             }
@@ -76,7 +83,7 @@ app.get('/addblog',(req,res)=>{
     res.render("addBlog")
 })
 
-app.post('/addblog', async(req, res) => {
+app.post('/addblog',  upload.single('image') ,async(req, res) => {
 
     const {title, subTitle, description} = req.body
     if(!title || !subTitle || !description) {
@@ -87,13 +94,14 @@ app.post('/addblog', async(req, res) => {
   await blogs.create({
         title: title,
         subTitle: subTitle,
-        description: description
+        description: description,
+        image: process.env.backendUrl + req.file.filename
     })
     res.redirect('/');
 });
 
 
-
+app.use(express.static('./uploads/'))
 
 
 
