@@ -46,6 +46,32 @@ app.get('/delete/:id',async(req,res)=>{
  res.redirect('/')
 })
 
+app.get('/update/:id',async (req, res)=>{
+    const blogId = req.params.id 
+    const blogData = await blogs.findByPk(blogId)
+ 
+    res.render("updateBlog",{id : blogId, blog : blogData})
+})
+
+app.post('/update/:id', async (req, res) => {
+    const {id} = req.params
+    const {title, subTitle, description} = req.body
+    if(!title || !subTitle || !description) {
+        return res.status(400).send("All fields are required");
+    }
+    //updating the database
+    await blogs.update({
+        title: title,
+        subTitle: subTitle,
+        description: description},{
+            where:{
+                id:id
+            }
+        }
+    )
+ res.send("Blog updated successfully")
+})
+
 app.get('/addblog',(req,res)=>{
     res.render("addBlog")
 })
