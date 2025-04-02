@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const blogRoute = require("./routes/blogRoute.js")
+const userRoute = require("./routes/userRoute.js")
 
 require('dotenv').config()
 
@@ -17,6 +18,8 @@ app.use(express.json());
 
 
 app.use("",blogRoute)
+app.use("",userRoute)
+
 const PORT = 3000
 app.listen(PORT,()=>{
     console.log(`NodeJs project is running on port ${PORT}` )
