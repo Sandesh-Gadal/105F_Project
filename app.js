@@ -1,9 +1,10 @@
 const express = require('express');
-const { blogs } = require('./model/index.js');
 const app = express();
-const {storage , multer}= require("./middleware/multerConfig.js")
+const blogRoute = require("./routes/blogRoute.js")
+
 require('dotenv').config()
-const upload = multer({storage: storage})
+
+
 
 //alternative for above two lines 
 // const app = require('express')();
@@ -13,95 +14,19 @@ require("./model/index.js")
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
+
+
+app.use("",blogRoute)
 const PORT = 3000
 app.listen(PORT,()=>{
     console.log(`NodeJs project is running on port ${PORT}` )
 })
 
-//HOMe page 
-app.get('/',async(req,res)=>{
-    //blogs database batw data[rows] nikalera home page ma dekhauney 
-   const blogsTableBlogs = await blogs.findAll()
-   
-    res.render("home",{blogs : blogsTableBlogs})
-})
 
-app.get('/blog/:id', async (req,res)=>{
-  const blogId = req.params.id
-//   const foundData =  await blogs.findByPk(blogId)
-const foundData = await blogs.findAll({
-    where :{
-        id: blogId
-    }
-})
-console.log(foundData)  
-
-    res.render("singleBlog",{blog : foundData})
-})
-
-app.get('/delete/:id',async(req,res)=>{
-  const blogId = req.params.id 
- await blogs.destroy({
-    where :{
-        id : blogId
-    }
- })
- res.redirect('/')
-})
-
-app.get('/update/:id',async (req, res)=>{
-    const blogId = req.params.id 
-    const blogData = await blogs.findByPk(blogId)
- 
-    res.render("updateBlog",{id : blogId, blog : blogData})
-})
-
-app.post('/update/:id', upload.single('image') , async (req, res) => {
-    const {id} = req.params
-    const {title, subTitle, description} = req.body
-  
-  
-    if(!title || !subTitle || !description)  {
-        return res.status(400).send("All fields are required");
-    }
-    //updating the database
-    await blogs.update({
-        title: title,
-        subTitle: subTitle,
-        description: description,
-        image: process.env.backendUrl + req.file.filename
-    },{
-            where:{
-                id:id
-            }
-        }
-    )
- res.send("Blog updated successfully")
-})
-
-app.get('/addblog',(req,res)=>{
-    res.render("addBlog")
-})
-
-app.post('/addblog',  upload.single('image') ,async(req, res) => {
-
-    const {title, subTitle, description} = req.body
-    if(!title || !subTitle || !description) {
-        return res.status(400).send("All fields are required");
-    }
-   
-    //inserting into the database
-  await blogs.create({
-        title: title,
-        subTitle: subTitle,
-        description: description,
-        image: process.env.backendUrl + req.file.filename
-    })
-    res.redirect('/');
-});
 
 
 app.use(express.static('./uploads/'))
+app.use(express.static(__dirname + '/public/'))
 
 
 
