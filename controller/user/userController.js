@@ -1,5 +1,6 @@
 const {users} = require("../../model/index.js")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 
 exports.renderRegisterForm = (req ,res) => {
@@ -12,7 +13,7 @@ exports.renderLoginForm = (req , res) => {
 
 exports.registerUser = async (req,res) => {
     const  {username ,email,password } = req.body
-    console.log(req.body)
+  
     if(!username || !email || !password) {
         return res.status(400).send("All fields are required");
     }
@@ -42,9 +43,15 @@ exports.loginUser = async (req,res)=> {
         if(!isPasswordValid) {
             return res.status(400).send("Invalid password")
         }else{
+            var token = jwt.sign({id : foundUser[0].id}, 'thisisthesecretkeydontshare',{expiresIn: '1d'})
+            res.cookie('jwttoken', token ,{
+                httpOnly: true,
+                expires : new Date(Date.now() + 3*24*60*60*1000),
+                secure: true
+            })
             res.redirect('/')
         }
     }
 
-    console.log(foundUser)
+   
 }
