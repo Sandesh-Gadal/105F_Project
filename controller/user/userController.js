@@ -43,7 +43,7 @@ exports.loginUser = async (req,res)=> {
         if(!isPasswordValid) {
             return res.status(400).send("Invalid password")
         }else{
-            var token = jwt.sign({id : foundUser[0].id}, 'thisisthesecretkeydontshare',{expiresIn: '1d'})
+            var token = jwt.sign({id : foundUser[0].id}, process.env.secretKey ,{expiresIn: '1d'})
             res.cookie('jwttoken', token ,{
                 httpOnly: true,
                 expires : new Date(Date.now() + 3*24*60*60*1000),
@@ -52,6 +52,4 @@ exports.loginUser = async (req,res)=> {
             res.redirect('/')
         }
     }
-
-   
 }

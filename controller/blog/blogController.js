@@ -13,7 +13,7 @@ exports.renderAddBlog = (req,res)=>{
 }
 
 exports.addBlog = async(req, res) => {
-
+    const {userId} = req 
     const {title, subTitle, description} = req.body
     if(!title || !subTitle || !description) {
         return res.status(400).send("All fields are required");
@@ -24,7 +24,8 @@ exports.addBlog = async(req, res) => {
         title: title,
         subTitle: subTitle,
         description: description,
-        image: process.env.backendUrl + req.file.filename
+        image: process.env.backendUrl + req.file.filename,
+        userId: userId
     })
     res.redirect('/');
 }

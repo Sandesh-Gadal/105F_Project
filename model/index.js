@@ -37,6 +37,8 @@ db.users = require("./userModel.js")(sequelize, DataTypes);
 // relationship 
 // db.users.hasMany(db.blogs)
 // db.blogs.belongsTo(db.users)
+db.users.hasMany(db.blogs)
+db.blogs.belongsTo(db.users)
 
 // db.users.hasMany(db.comments)
 // db.comments.belongsTo(db.users)
