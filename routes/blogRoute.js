@@ -11,7 +11,7 @@ router.route('/addblog').get(renderAddBlog).post(upload.single('image'),isAuthen
 
 //singleBlog
 router.route('/blog/:id').get(renderSingleBlog)
-router.route('/delete/:id').get(deleteBlog)
+router.route('/delete/:id').get(isAuthenticated,deleteBlog)
 router.route('/update/:id').get(renderUpdateBlog).post(upload.single('image'), updateBlog)
 
 

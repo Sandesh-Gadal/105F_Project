@@ -18,6 +18,11 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
 
+app.use((req,res,next)=>{
+    res.locals.currentUser = req.cookies.jwttoken
+    next()
+})
+
 app.use("",blogRoute)
 app.use("",userRoute)
 

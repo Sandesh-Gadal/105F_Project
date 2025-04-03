@@ -24,6 +24,7 @@
                 <h3><%= blog.title %></h3>
                 <p><%= blog.description %></p>
                 <p><%= blog.subTitle%></p>
+                <p>Author : <%= blog.user.username%></p>
                 <button style="margin: 20px; padding: 10px; background-color: #1cb7cc; color: white; border: none; border-radius: 5px;">
                     <a href="/blog/<%-blog.id%>" style="color: white; text-decoration: none;">See More</a>
                 </button>

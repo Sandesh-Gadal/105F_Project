@@ -1,8 +1,15 @@
 const { blogs } = require('../../model/index.js');
+const {users} = require("../../model/index.js")
 
 exports.renderHome = async(req,res)=>{
     //blogs database batw data[rows] nikalera home page ma dekhauney 
-   const blogsTableBlogs = await blogs.findAll()
+   const blogsTableBlogs = await blogs.findAll({
+    include :{
+        model :users ,
+        attributes : ['username']
+    }
+   })
+  console.log(blogsTableBlogs)
    
     res.render("home",{blogs : blogsTableBlogs})
 }
@@ -59,6 +66,9 @@ exports.renderSingleBlog =  async (req,res)=>{
 const foundData = await blogs.findAll({
     where :{
         id: blogId
+    },
+    include :{
+    model : users 
     }
 })
 console.log(foundData)  
