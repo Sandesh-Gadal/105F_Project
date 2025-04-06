@@ -1,4 +1,4 @@
-const twilio = require('twilio')("ACe15c932d2acd2854f39b80706ea476a5","47ea190c6dbc4b1feda9bd481bb0cff4")
+const twilio = require('twilio')("Api key","APi key secret")
 
 async function sendSMS(){
    await  twilio.messages.create({
