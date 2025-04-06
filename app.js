@@ -2,12 +2,13 @@ const express = require('express');
 const app = express();
 const blogRoute = require("./routes/blogRoute.js")
 const userRoute = require("./routes/userRoute.js")
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const sendSMS = require("./services/sendSMS");
 
 require('dotenv').config()
 
 
-
+ 
 //alternative for above two lines 
 // const app = require('express')();
 
@@ -18,6 +19,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
 
+// sendSMS()
 app.use((req,res,next)=>{
     res.locals.currentUser = req.cookies.jwttoken
     next()
