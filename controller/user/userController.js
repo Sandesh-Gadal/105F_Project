@@ -88,6 +88,7 @@ console.log("userData:",userData)
     }
    await sendEmail(data)
    userData[0].otp = generatedOtp
+   userData[0].otpGeneratedTime = Date.now() 
    await userData[0].save()
   res.redirect('/otpForm?email='+email)
 }
@@ -110,5 +111,57 @@ const email = req.params.id
     if(data.length === 0) {
         return res.status(400).send("Invalid OTP")
     }
-    res.send("OTP verified successfully")
+
+    const generatedTime = data[0].otpGeneratedTime
+    const currentTime = Date.now()
+    if(currentTime - generatedTime <= 2*60*1000) {
+        res.redirect(`/resetPassword?email=${email}&otp=${otp}`)
+        
+    }else{
+        res.status(400).send("OTP expired")
+    }
+   
 }
+
+
+exports.renderResetPassword = (req,res)=>{
+    const {email, otp} = req.query
+   if(!email || !otp) {
+        return res.status(400).send("Invalid OTP")
+    }
+    res.render("resetPassword",{email,otp})
+}
+
+exports.handleResetPassword = async (req,res) => {
+   const{email ,otp} = req.params
+
+   const {newPassword,newPasswordConfirm} = req.body
+   if(!email || !otp || !newPassword || !newPasswordConfirm) {
+    return res.status(400).send("All fields are required");
+   }
+   if(newPassword !== newPasswordConfirm) {
+    return res.status(400).send("Passwords do not match");
+   }
+   const userData = await users.findAll({
+    where : {
+        email : email,
+        otp : otp
+    }
+   })
+
+
+
+   const generatedTime = userData[0].otpGeneratedTime
+   const currentTime = Date.now()
+   if(currentTime - generatedTime <= 2*60*1000) {
+    res.send(`Password reset successfully `)
+    userData[0].password = bcrypt.hashSync(newPassword, 10)
+    await userData[0].save()
+    res.redirect('/login')
+   }else{
+       res.status(400).send("OTP expired")
+   }
+   
+
+}
+
