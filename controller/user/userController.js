@@ -10,11 +10,11 @@ exports.renderRegisterForm = (req ,res) => {
 
 exports.renderLoginForm = (req , res) => {
     const {error,success} = req.flash()
-    console.log("Error",error)
     res.render("login",{error,success})
 }
 
 exports.registerUser = async (req,res) => {
+ 
     const  {username ,email,password } = req.body
   
     if(!username || !email || !password) {
@@ -28,7 +28,8 @@ exports.registerUser = async (req,res) => {
    })
    req.flash('success', 'User registered successfully')
     res.redirect('/login')
-}
+  }
+
 
 exports.loginUser = async (req,res)=> {
     const {email , password} = req.body
