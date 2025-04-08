@@ -92,16 +92,16 @@
     </header>
 
 
-  
-    <form action="/login" method="post" >
-     
 
+    <form action="/login" method="post" >
+     <p style = "color:green; "><%-success%></p>
+        <h2>Login</h2>
         <label for="email">email:</label>
         <input type="text" id="email" name="email" placeholder="Enter email" required>
 
         <label for="password">password:</label>
         <input type="password" id="password" name="password" placeholder="Enter password" required>
-
+        <p style="color: red;"><%-error%></p>
         <button type="submit">Login</button>
 
         <p><a href="/forgotPassword">Forgot Password ? </a></p>

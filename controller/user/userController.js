@@ -9,7 +9,9 @@ exports.renderRegisterForm = (req ,res) => {
 }
 
 exports.renderLoginForm = (req , res) => {
-    res.render("login")
+    const {error,success} = req.flash()
+    console.log("Error",error)
+    res.render("login",{error,success})
 }
 
 exports.registerUser = async (req,res) => {
@@ -24,6 +26,7 @@ exports.registerUser = async (req,res) => {
     email, 
     password : bcrypt.hashSync(password, 10)
    })
+   req.flash('success', 'User registered successfully')
     res.redirect('/login')
 }
 
@@ -39,10 +42,13 @@ exports.loginUser = async (req,res)=> {
     })
     if(foundUser.length === 0) {
         return res.status(400).send("No User found with this email")
+     
     }else{
         const isPasswordValid = await bcrypt.compareSync(password , foundUser[0].password)
         if(!isPasswordValid) {
-            return res.status(400).send("Invalid password")
+            req.flash('error', 'Invalid password or email')
+           
+            return res.redirect('/login')
         }else{
             var token = jwt.sign({id : foundUser[0].id}, process.env.secretKey ,{expiresIn: '1d'})
             res.cookie('jwttoken', token ,{
@@ -61,7 +67,8 @@ exports.logoutUser = (req,res) => {
 }
 
 exports.forgotPassword = (req , res)=> {
-    res.render("forgotPassword")
+    const {error} = req.flash()
+    res.render("forgotPassword",{error})
 }
 
 exports.handleForgotPassword = async (req,res) =>{
@@ -76,7 +83,9 @@ exports.handleForgotPassword = async (req,res) =>{
     }  
 })
     if(userData.length === 0) {
-        return res.status(400).send("No user found with this email");
+        req.flash('error','No user found with this email')
+        res.redirect('forgotPassword')
+        //  res.status(400).send("");
 }
 console.log("userData:",userData)
     const generatedOtp = Math.floor(1000 + Math.random() * 9000);
@@ -96,7 +105,8 @@ console.log("userData:",userData)
 
 exports.renderOTPForm = (req,res) => {
     const {email} = req.query
-    res.render("otpForm",{email:email})
+    const {error} = req.flash()
+    res.render("otpForm",{email:email, error})
 }
 
 exports.verifyOTP = async (req,res) => {
@@ -109,7 +119,8 @@ const email = req.params.id
         }
     })
     if(data.length === 0) {
-        return res.status(400).send("Invalid OTP")
+        req.flash('error', 'Invalid OTP')
+       return res.redirect('/otpForm?email='+email)
     }
 
     const generatedTime = data[0].otpGeneratedTime

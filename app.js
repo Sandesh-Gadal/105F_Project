@@ -4,6 +4,17 @@ const blogRoute = require("./routes/blogRoute.js")
 const userRoute = require("./routes/userRoute.js")
 const cookieParser = require("cookie-parser");
 const sendSMS = require("./services/sendSMS");
+const session = require("express-session");
+const flash = require('connect-flash')
+
+
+app.use(session({
+    secret : "hellothisissecret",
+    resave :false ,
+    saveUninitialized : false
+}))
+
+app.use(flash())
 
 require('dotenv').config()
 
