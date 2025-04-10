@@ -93,29 +93,37 @@
                     <h3><%= blog[0].title %></h3>
                     <p><%= blog[0].description %></p>
                     <p><%= blog[0].subTitle%></p>
-                    <p>Author : <%- blog[0].user.username %></p>
-                   <% if(currentUser){ %>
-                    <button><a href="/delete/<%-blog[0].id%>">Delete me </a></button>
-                    <button><a href="/update/<%-blog[0].id%>">Update me </a></button>
+                    <p>Author: <%- blog[0].user.username %></p>
+                    <% if(currentUser){ %>
+                        <button><a href="/delete/<%-blog[0].id%>">Delete me </a></button>
+                        <button><a href="/update/<%-blog[0].id%>">Update me </a></button>
                     <% } %>
-                   
                 </div>
-               <ul class="comments" type="cirlce"> 
-                <% comments.forEach((comment)=>{%>
-                    <li><%-comment.commentMessage%> --- </li>
-                <%})%>
-               </ul>
-                <form action="/comment" method="post">
-                    <input type= "text" name="commentMessage" placeholder="Add a comment">
-                   <input type="hidden" name="blogId" value="<%= blog[0].id %>">
-                   <input type="hidden" name="userId" value="<%= blog[0].userId %>">
-                    <button>Comment</button>
-                </form>
             </div>
+            <ul class="comments" type="circle"> 
+                <% comments.forEach((comment) => { %>
+                    <li>
+                        <%- comment.commentMessage %> --- 
+                        <% if (comment.user) { %>
+                            <%- comment.user.username %>
+                        <% } else { %>
+                            Anonymous
+                        <% } %>
+                    <%if(currentUserId === comment.userId){ %>
+                        <a href="/deleteComment/<%-comment.id%>">Delete </a>
+                        <%}%>
+                        
+                    </li>
+                <% }) %>
+            </ul>
+            <form action="/comment" method="post">
+                <input type="text" name="commentMessage" placeholder="Add a comment">
+                <input type="hidden" name="blogId" value="<%= blog[0].id %>">
+                <!-- <input type="hidden" name="userId" value="<%= currentUser ? currentUser.id : '' %>"> -->
+                <button>Comment</button>
+            </form>
         </div>
-
     </section>
     <%- include ('footer')%>
-
 </body>
 </html>

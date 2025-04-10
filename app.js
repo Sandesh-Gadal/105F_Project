@@ -1,4 +1,5 @@
 const express = require('express');
+require("dotenv").config()
 const app = express();
 const blogRoute = require("./routes/blogRoute.js")
 const userRoute = require("./routes/userRoute.js")
@@ -7,6 +8,8 @@ const cookieParser = require("cookie-parser");
 const sendSMS = require("./services/sendSMS");
 const session = require("express-session");
 const flash = require('connect-flash')
+const promisify = require('util').promisify
+const jwt = require('jsonwebtoken')
 
 
 app.use(session({
@@ -17,7 +20,7 @@ app.use(session({
 
 app.use(flash())
 
-require('dotenv').config()
+
 
 
  
@@ -32,8 +35,13 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
 
 // sendSMS()
-app.use((req,res,next)=>{
+app.use(async(req,res,next)=>{
     res.locals.currentUser = req.cookies.jwttoken
+    if(req.cookies.jwttoken){
+        const data = await promisify(jwt.verify)(req.cookies.jwttoken, process.env.secretKey)
+ res.locals.currentUserId = data.id
+
+    }
     next()
 })
 

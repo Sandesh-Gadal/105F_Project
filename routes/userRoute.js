@@ -1,6 +1,6 @@
-const { addComment } = require("../controller/blog/blogController")
+
 const { renderRegisterForm, registerUser, renderLoginForm, loginUser, logoutUser , forgotPassword, handleForgotPassword, renderOTPForm, verifyOTP, renderResetPassword, handleResetPassword  } = require("../controller/user/userController")
-const catchError = require("../services/catchError")
+
 
 const router = require("express").Router()
 

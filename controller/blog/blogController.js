@@ -77,11 +77,11 @@ const commentData = await comments.findAll({
         blogId : blogId
     },
     include :{
-        model : users 
+        model : users
     }
 })
     // console.log("foundData", foundData[0].user)
-console.log("commentData", commentData)
+// console.log("commentData", commentData)
 
     res.render("singleBlog",{blog : foundData , comments : commentData})
 }
@@ -105,10 +105,12 @@ exports.renderUpdateBlog = async (req,res)=>{
 
 exports.addComment =async (req,res)=>{
    
- 
-    const {commentMessage ,blogId ,userId } = req.body
+ const {userId} = req
+    const {commentMessage ,blogId  } = req.body
    
-
+console.log("commentMessage", commentMessage)
+console.log("blogId", blogId)
+console.log("userId", userId)
     if(!commentMessage || !blogId || !userId) {
         return res.send("Please provide comment ,blogId or userId")
     }
@@ -118,5 +120,34 @@ exports.addComment =async (req,res)=>{
         userId : userId
     })
     res.redirect(`/blog/${blogId}`)
+}
+
+exports.deleteComment = async(req ,res) =>{
+    const {id} = req.params
+    const {userId} = req
+
+    const [comment] = await comments.findAll({
+        where :{
+            id : id,
+        }
+    })
+   
+
+    if(comment.userId !== userId) {
+        return res.status(401).send("You are not authorized to delete this comment")
+    }
+    await comments.destroy({
+        where :{
+            id : id
+        }
+    })
+    res.redirect(`/blog/${comment.blogId}`)
+  
+
+
+
+
+
+
 }
 
