@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const blogRoute = require("./routes/blogRoute.js")
 const userRoute = require("./routes/userRoute.js")
+const commentRoute = require("./routes/commentRoute.js")
 const cookieParser = require("cookie-parser");
 const sendSMS = require("./services/sendSMS");
 const session = require("express-session");
@@ -38,6 +39,7 @@ app.use((req,res,next)=>{
 
 app.use("",blogRoute)
 app.use("",userRoute)
+app.use("",commentRoute)
 
 const PORT = 3000
 app.listen(PORT,()=>{
